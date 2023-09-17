@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Reservation App Task</string>
+    <string name="service">الخدمات</string>
+    <string name="service_sections">أقسام الخدمات</string>
+    <string name="empty_screen_first_text">قيد الإنشاء</string>
+    <string name="empty_screen_second_text">سيتم تطوير هذه الخاصية قريبا</string>
+</resources>

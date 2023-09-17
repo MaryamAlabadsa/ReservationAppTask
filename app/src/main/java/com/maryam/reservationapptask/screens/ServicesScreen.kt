@@ -71,7 +71,7 @@ fun ScrollingContent(
             fontWeight = FontWeight.Medium,
             color = Color.Black,
             fontSize = 16.sp,
-            modifier = Modifier.align(Alignment.End)
+            modifier = Modifier.align(Alignment.Start)
         )
         LazyList(apiServiceModel = apiServiceModel, navController = navController, context)
     }

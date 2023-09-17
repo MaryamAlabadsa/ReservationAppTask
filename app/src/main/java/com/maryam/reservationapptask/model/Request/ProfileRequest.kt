@@ -14,7 +14,7 @@ data class ProfileRequest(
     val mobile: String,
 
     @SerializedName("country_id")
-    val country_id: Number=1,
+    val country_id: Int=1,
 
 //    @SerializedName("gender")
 //    val gender: String,

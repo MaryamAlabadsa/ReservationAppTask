@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -57,12 +58,13 @@ fun ServiceDesScreen(
         }
     }
 //    var liveData=apiServiceModel.liveServicesDesData
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(gray)
-    ) {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(gray)
+        ) {
 
             Box(modifier = Modifier.fillMaxWidth()) {
                 Image(
@@ -83,7 +85,9 @@ fun ServiceDesScreen(
                             imageVector = Icons.Default.ArrowForward,
                             contentDescription = "ArrowBack Icon",
                             modifier = Modifier
-                                .size(24.dp), tint = Color.White // Color of the icon
+                                .size(24.dp).align(Alignment.CenterStart)
+                                .clickable { navController.popBackStack() },
+                            tint = Color.White
                         )
                         category.name.let {
                             if (it != null) {
@@ -151,7 +155,12 @@ fun ServiceDesScreen(
                                 modifier = Modifier.padding(top = 14.dp)
                             )
                             if (apiServiceModel.liveServicesDesData.size == 0) {
-                                Box(modifier = Modifier.height(380.dp).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                                Box(
+                                    modifier = Modifier
+                                        .height(380.dp)
+                                        .fillMaxWidth(),
+                                    contentAlignment = Alignment.Center
+                                ) {
                                     Image(
                                         painter = painterResource(id = R.drawable.empty_box),
                                         contentDescription = "",

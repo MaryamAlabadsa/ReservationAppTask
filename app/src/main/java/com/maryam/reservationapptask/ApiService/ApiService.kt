@@ -5,6 +5,7 @@ import com.maryam.reservationapptask.model.Request.ProfileRequest
 import com.maryam.reservationapptask.model.Response.*
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -37,10 +38,14 @@ interface ApiService {
     @POST("user/advisors/make_complaint")
     suspend fun makeComplaint(@Body complaintRequest: ComplaintRequest): ComplaintResponse
 
+    @Multipart
     @POST("user/update_profile")
     suspend fun profileUpdate(
-        @Body profileRequest: ProfileRequest,
-//        @Part part: MultipartBody.Part
+        @Part("name") name: RequestBody,
+        @Part("email") email: RequestBody,
+        @Part("mobile") mobile: RequestBody,
+        @Part("country_id") country_id: RequestBody,
+        @Part file: MultipartBody.Part
     ): ProfileResponse
 
 
@@ -54,7 +59,7 @@ interface ApiService {
                         val request = chain.request().newBuilder()
                             .addHeader(
                                 "Authorization",
-                                "Bearer 551|3teyvruQYzIC7JH29eCVJ4QPTS1o2XMBGrzsxvdM"
+                                "Bearer 552|fFhhCtp4qkctBKmVaiHlVNjaJSG2CKxRP2gQj4RE"
                             )
                             .addHeader("Accept", "application/json")
                             .build()

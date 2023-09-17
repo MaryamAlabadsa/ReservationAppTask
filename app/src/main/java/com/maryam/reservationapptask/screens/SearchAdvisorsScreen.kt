@@ -1,6 +1,7 @@
 package com.maryam.reservationapptask.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -10,11 +11,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -35,6 +39,8 @@ fun SearchAdvisorsScreen(
     if (category_id != null) {
         apiServiceModel.searchAdvisors(LocalContext.current, category_id, service_id)
     }
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+
     Column(modifier = Modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
@@ -49,8 +55,10 @@ fun SearchAdvisorsScreen(
                 Icon(
                     imageVector = Icons.Outlined.ArrowForward,
                     contentDescription = "",
-                    tint = Color.White
-                )
+                    tint = Color.White,
+                    modifier = Modifier.clickable { navController.popBackStack() },
+
+                    )
             }
             Text(
                 text = "مقدمي الخدمة  ",
@@ -65,14 +73,14 @@ fun SearchAdvisorsScreen(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            ScrollingContent(apiServiceModel,navController)
+            ScrollingContent(apiServiceModel, navController)
         }
 
-    }
+    }}
 }
 
 @Composable
-fun ScrollingContent(apiServiceModel: ApiServiceModel,navController: NavHostController) {
+fun ScrollingContent(apiServiceModel: ApiServiceModel, navController: NavHostController) {
 //    var scrollState by rememberScrollState()
     Column(
         modifier = Modifier.fillMaxSize(),

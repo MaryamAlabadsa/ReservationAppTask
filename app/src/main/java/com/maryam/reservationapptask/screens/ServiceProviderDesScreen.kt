@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
@@ -52,14 +53,19 @@ fun ServiceProviderDesScreen(
     val liveData = apiServiceModel.liveAdvisorsDesData
     apiServiceModel.getAdvisorDetails(LocalContext.current, advisorId)
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        BottomSheetLayout(liveData,apiServiceModel,advisorId)
+        BottomSheetLayout(liveData, apiServiceModel, advisorId, navHostController)
 
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BottomSheetLayout(liveData: AdvisorDes, apiServiceModel: ApiServiceModel, advisorId: Int) {
+fun BottomSheetLayout(
+    liveData: AdvisorDes,
+    apiServiceModel: ApiServiceModel,
+    advisorId: Int,
+    navHostController: NavHostController
+) {
     val coroutineScope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
@@ -74,7 +80,7 @@ fun BottomSheetLayout(liveData: AdvisorDes, apiServiceModel: ApiServiceModel, ad
             Column(
                 //...
             ) {
-                SheetContent(coroutineScope, modalSheetState,apiServiceModel,advisorId)
+                SheetContent(coroutineScope, modalSheetState, apiServiceModel, advisorId)
             }
         },
 //        sheetContentColor = Color.White,
@@ -83,7 +89,8 @@ fun BottomSheetLayout(liveData: AdvisorDes, apiServiceModel: ApiServiceModel, ad
         Scaffold {
             Column(
                 modifier = Modifier
-                    .fillMaxSize().background(gray),
+                    .fillMaxSize()
+                    .background(gray),
 //                contentAlignment = Alignment.Center,
             ) {
                 Box(
@@ -99,8 +106,10 @@ fun BottomSheetLayout(liveData: AdvisorDes, apiServiceModel: ApiServiceModel, ad
                         Icon(
                             imageVector = Icons.Outlined.ArrowForward,
                             contentDescription = "",
-                            tint = Color.White
-                        )
+                            tint = Color.White,
+                            modifier = Modifier.clickable { navHostController.popBackStack() },
+
+                            )
                     }
                     Text(
                         text = " تفاصيل مقدم الخدمة  ",
@@ -157,6 +166,7 @@ fun screenContent(liveData: AdvisorDes, apiServiceModel: ApiServiceModel) {
         }
     }
 }
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FirstBox(modifier: Modifier, liveData: AdvisorDes) {
@@ -181,7 +191,7 @@ fun FirstBox(modifier: Modifier, liveData: AdvisorDes) {
                             .height(86.dp)
                             .width(86.dp)
                             .clip(RoundedCornerShape(100.dp))
-                  )
+                    )
                 }
                 Column(
                     modifier = Modifier

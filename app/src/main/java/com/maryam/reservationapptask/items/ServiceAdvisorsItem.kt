@@ -83,13 +83,15 @@ fun ServiceAdvisorsItem(data: AdvisorsData, onClick: () -> Unit) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically, // Center items vertically
                         ) {
-                            Text(
-                                text = "maryam",
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .padding(start = 8.dp),
-                                fontSize = 14.sp
-                            )
+                            data.name?.let {
+                                Text(
+                                    text = it,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .padding(start = 8.dp),
+                                    fontSize = 14.sp
+                                )
+                            }
                             Spacer(modifier = Modifier.width(68.dp))
                             data.advisorStatus?.let { statusBox(status = it) }
                             Spacer(modifier = Modifier.width(14.dp))

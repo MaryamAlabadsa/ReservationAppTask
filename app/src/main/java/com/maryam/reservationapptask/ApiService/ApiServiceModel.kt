@@ -12,6 +12,9 @@ import com.maryam.reservationapptask.model.Request.ComplaintRequest
 import com.maryam.reservationapptask.model.Request.ProfileRequest
 import com.maryam.reservationapptask.model.Response.*
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 
 class ApiServiceModel : ViewModel() {
@@ -140,24 +143,53 @@ class ApiServiceModel : ViewModel() {
 
     fun updateProfile(
         context: Context,
-        profileRequest: ProfileRequest
+        profileRequest: ProfileRequest,
+        imagePart: MultipartBody.Part?
     ) {
+        val name = RequestBody.create("text/plain".toMediaTypeOrNull(), profileRequest.name)
+        val email = RequestBody.create("text/plain".toMediaTypeOrNull(), profileRequest.email)
+        val mobile = RequestBody.create("text/plain".toMediaTypeOrNull(), profileRequest.mobile)
+        val countryId = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            profileRequest.country_id.toString()
+        )
+
         viewModelScope.launch {
             try {
                 val apiService = ApiService.getInstance()
-                val userResponse = apiService.profileUpdate(profileRequest)
-                if (userResponse.status == true) {
-//                    liveAdvisorsDesData = userResponse
-                    Toast.makeText(context, userResponse.responseMessage + "", Toast.LENGTH_LONG).show()
+                val userResponse = imagePart?.let {
+                    apiService.profileUpdate(
+                        name,
+                        email,
+                        mobile,
+                        countryId,
+                        it
+                    )
+                }
+                if (userResponse != null) {
+                    if (userResponse.status == true) {
+                        //                    liveAdvisorsDesData = userResponse
+                        Toast.makeText(
+                            context,
+                            userResponse.responseMessage + "",
+                            Toast.LENGTH_LONG
+                        ).show()
 
-                } else {
-                    Toast.makeText(context, userResponse.responseMessage + "", Toast.LENGTH_LONG)
-                        .show();
-                    Log.e("errormmmm", userResponse.toString())
+                        Log.e("errors2", userResponse.toString())
+
+                    } else {
+                        Toast.makeText(context, "error"+ "", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, userResponse.responseMessage + "", Toast.LENGTH_LONG).show();
+                        Log.e("errors", userResponse.toString())
+                    }
                 }
             } catch (e: Exception) {
+                Toast.makeText(context, "error22"+ "", Toast.LENGTH_LONG).show();
+
                 // Handle exception if any error occurs during the API request
                 Toast.makeText(context, e.message + "", Toast.LENGTH_LONG).show();
+                Log.e("errormmmm", e.message.toString())
+
             }
         }
     }

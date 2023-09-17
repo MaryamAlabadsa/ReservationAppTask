@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myallwork.ViewModel.ApiServiceModel
+import com.maryam.reservationapptask.ApiService.FileUtil
 import com.maryam.reservationapptask.R
 import com.maryam.reservationapptask.model.Request.ProfileRequest
 import com.maryam.reservationapptask.ui.theme.*
@@ -41,6 +43,7 @@ import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.http.Part
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -260,32 +263,30 @@ fun MoreScreen(
                                         Toast.LENGTH_LONG
                                     ).show()
                                 } else {
-//                                    val file = File(Environment.getExternalStorageDirectory().toString() + File.separator)
-//                                    file.createNewFile()
-//
-//                                    // Convert bitmap to byte array
-//                                    val baos = ByteArrayOutputStream()
-//                                    bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos) // It can be also saved as JPEG
-//                                    convertBitmapToFile(context,bitmap)
-//                                    val part = MultipartBody.Part.createFormData(
-//                                        "pic", "myPic", RequestBody.create(
-//                                            "image/*".toMediaTypeOrNull(),
-//                                            inputStream.readBytes()
-//                                        )
-//                                    )
 
-                                    var profileRequest = ProfileRequest(
+                                    val profileRequest = ProfileRequest(
                                         name = name.text,
                                         email = email.text,
-                                        mobile = mobile.text,
+                                        mobile = mobile.text
                                     )
+
+                                   var resourceFile = imageUri?.let { FileUtil.from(context, it) }
+                                    val body = resourceFile?.run {
+                                        val requestFile = RequestBody.create(
+                                            "multipart/form-data".toMediaTypeOrNull(),
+                                            this)
+                                        MultipartBody.Part.createFormData("avatar",
+                                            name.toString(), requestFile)
+                                    }
+
                                     apiServiceModel.updateProfile(
                                         context,
-                                        profileRequest = profileRequest
+                                        profileRequest,
+                                        body
                                     )
-                                }
 
-//                                Toast.makeText(context, message, duration).show()
+
+                                }
                             },
                             shape = RoundedCornerShape(24.dp),
                             colors = ButtonDefaults.buttonColors(
@@ -304,6 +305,7 @@ fun MoreScreen(
         }
     }
 }
+
 fun convertBitmapToFile(context: Context, bitmap: Bitmap): Uri {
     val file = File(Environment.getExternalStorageDirectory().toString() + File.separator)
     file.createNewFile()
